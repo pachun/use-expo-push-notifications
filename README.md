@@ -72,7 +72,12 @@ Youll need to create that test helper yourself:
 ```typescript
 import * as Notifications from "expo-notifications"
 import useExpoPushNotifications from "@pachun/use-expo-push-notifications"
-import { DeepPartial } from "src/types/DeepPartial"
+
+export type DeepPartial<T> = T extends object
+  ? {
+      [P in keyof T]?: DeepPartial<T[P]>
+    }
+  : T
 
 jest.mock("@pachun/use-expo-push-notifications", () => ({
   __esModule: true,
