@@ -40,9 +40,84 @@ const App = () => {
 
 ## Motivation
 
-I made this because testing ref code sucks. With `useExpoPushNotifications`, you can focus on testing the behavior of your notification handling rather than ref code implementation.
+When you want to test the behavior of your app rather than [useEffect and useRef implementations](https://github.com/pachun/use-expo-push-notifications/blob/main/src/index.ts), this can be helpful.
 
-... post an example here, please, nick ...
+```typescript
+import { renderRouter, screen, waitFor } from "expo-router/testing-library"
+import expoPushNotificationsSimulator from "tests/helpers/expo-push-notifications-simulator"
+
+describe("receiving push notifications", () => {
+  it("displays text received in notifications", async () => {
+    renderRouter("src/app", { initialUrl: "/" })
+
+    expoPushNotificationsSimulator.sendNotification({
+      request: {
+        content: {
+          data: {
+            text_received_in_notifications: "Hello, world!",
+          },
+        },
+      },
+    })
+
+    await waitFor(async () => {
+      expect(screen.getByText("Hello, world!")).toBeTruthy()
+    })
+  })
+})
+```
+
+Youll need to create that test helper yourself:
+
+```typescript
+import * as Notifications from "expo-notifications"
+import useExpoPushNotifications from "@pachun/use-expo-push-notifications"
+import { DeepPartial } from "src/types/DeepPartial"
+
+jest.mock("@pachun/use-expo-push-notifications", () => ({
+  __esModule: true,
+  default: jest.fn(),
+}))
+
+const mockFunction = (thing: any) => thing as unknown as jest.Mock
+
+const expoPushNotificationsSimulator = (() => {
+  let sendNotification:
+    | ((notification: DeepPartial<Notifications.Notification>) => void)
+    | undefined
+  let sendNotificationInteraction:
+    | ((notification: DeepPartial<Notifications.NotificationResponse>) => void)
+    | undefined
+
+  mockFunction(useExpoPushNotifications).mockImplementation(
+    ({ onNotificationReceived, onNotificationInteraction }) => {
+      sendNotification = onNotificationReceived
+      sendNotificationInteraction = onNotificationInteraction
+    },
+  )
+
+  return {
+    get sendNotification() {
+      if (!sendNotification) {
+        throw new Error(
+          "onNotificationReceived is not yet assigned. Ensure the component using useExpoPushNotifications has rendered.",
+        )
+      }
+      return sendNotification
+    },
+    get sendNotificationInteraction() {
+      if (!sendNotificationInteraction) {
+        throw new Error(
+          "onNotificationInteraction is not yet assigned. Ensure the component using useExpoPushNotifications has rendered.",
+        )
+      }
+      return sendNotificationInteraction
+    },
+  }
+})()
+
+export default expoPushNotificationsSimulator
+```
 
 ## Contributing
 
