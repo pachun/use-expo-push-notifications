@@ -46,11 +46,25 @@ When you want to test the behavior of your app rather than [useEffect and useRef
 import { renderRouter, screen, waitFor } from "expo-router/testing-library"
 import expoPushNotificationsSimulator from "tests/helpers/expo-push-notifications-simulator"
 
+jest.mock("@pachun/use-expo-push-notifications", () => ({
+  __esModule: true,
+  default: jest.fn(),
+}))
+
 describe("receiving push notifications", () => {
   it("displays text received in notifications", async () => {
+    // capture your notification handler before you render
+    let sendNotification
+    jest
+      .mocked(useExpoPushNotifications)
+      .mockImplementation(({ onNotificationReceived }) => {
+        sendNotification = onNotificationReceived
+      })
+
     renderRouter("src/app", { initialUrl: "/" })
 
-    expoPushNotificationsSimulator.sendNotification({
+    // call your actual notification handler
+    sendNotification!({
       request: {
         content: {
           data: {
@@ -67,62 +81,13 @@ describe("receiving push notifications", () => {
 })
 ```
 
-Youll need to create that test helper yourself:
+This will allow you to test the actual behavior of your app when receiving notifications.
 
-```typescript
-import * as Notifications from "expo-notifications"
-import useExpoPushNotifications from "@pachun/use-expo-push-notifications"
+You can test how it will handle receiving notifications on different screens by rendering the router at different routes.
 
-export type DeepPartial<T> = T extends object
-  ? {
-      [P in keyof T]?: DeepPartial<T[P]>
-    }
-  : T
+You can do the same for testing notification interactions, like tapping a notification, or long pressing one to bring up the notification actions menu.
 
-jest.mock("@pachun/use-expo-push-notifications", () => ({
-  __esModule: true,
-  default: jest.fn(),
-}))
-
-const mockFunction = (thing: any) => thing as unknown as jest.Mock
-
-const expoPushNotificationsSimulator = (() => {
-  let sendNotification:
-    | ((notification: DeepPartial<Notifications.Notification>) => void)
-    | undefined
-  let sendNotificationInteraction:
-    | ((notification: DeepPartial<Notifications.NotificationResponse>) => void)
-    | undefined
-
-  mockFunction(useExpoPushNotifications).mockImplementation(
-    ({ onNotificationReceived, onNotificationInteraction }) => {
-      sendNotification = onNotificationReceived
-      sendNotificationInteraction = onNotificationInteraction
-    },
-  )
-
-  return {
-    get sendNotification() {
-      if (!sendNotification) {
-        throw new Error(
-          "onNotificationReceived is not yet assigned. Ensure the component using useExpoPushNotifications has rendered.",
-        )
-      }
-      return sendNotification
-    },
-    get sendNotificationInteraction() {
-      if (!sendNotificationInteraction) {
-        throw new Error(
-          "onNotificationInteraction is not yet assigned. Ensure the component using useExpoPushNotifications has rendered.",
-        )
-      }
-      return sendNotificationInteraction
-    },
-  }
-})()
-
-export default expoPushNotificationsSimulator
-```
+You can log the interaction if you don't know what it will look like in your handler, and then write a test for that format of message and what you'd like to happen when it's received.
 
 ## Contributing
 
