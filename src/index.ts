@@ -17,6 +17,19 @@ const useExpoPushNotifications = ({
     React.useRef<EventSubscription | null>(null)
 
   React.useEffect(() => {
+    /* c8 ignore start */
+    if (receivedNotificationWhenTheAppIsOpenListener.current) {
+      Notifications.removeNotificationSubscription(
+        receivedNotificationWhenTheAppIsOpenListener.current,
+      )
+    }
+    if (notificationTappedWhenTheAppIsClosedListener.current) {
+      Notifications.removeNotificationSubscription(
+        notificationTappedWhenTheAppIsClosedListener.current,
+      )
+    }
+    /* c8 ignore stop */
+
     receivedNotificationWhenTheAppIsOpenListener.current =
       Notifications.addNotificationReceivedListener(onNotificationReceived)
 
