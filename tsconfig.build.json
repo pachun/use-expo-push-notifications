@@ -1,10 +1,13 @@
 {
-  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "noEmit": false,
+    "target": "esnext",
+    "module": "CommonJS",
     "outDir": "lib",
     "declaration": true,
-    "module": "CommonJS", // valid for publishing
-    "bundler": false // override if inherited
-  }
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["src/**/*"]
 }

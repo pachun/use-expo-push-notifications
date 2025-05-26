@@ -1,6 +1,6 @@
 {
   "name": "@pachun/use-expo-push-notifications",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "license": "MIT",
   "description": "Simpler (and more testable) expo-notifications event handling",
   "keywords": [
@@ -22,7 +22,7 @@
     "tests/jest.setup.ts"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --project tsconfig.build.json",
     "lint": "eslint src",
     "test": "jest",
     "doctor": "npx expo-doctor"
