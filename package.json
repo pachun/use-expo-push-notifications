@@ -1,6 +1,6 @@
 {
   "name": "@pachun/use-expo-push-notifications",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "license": "MIT",
   "description": "Simpler (and more testable) expo-notifications event handling",
   "keywords": [
