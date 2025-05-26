@@ -6,9 +6,15 @@ import { act, renderHook } from "@testing-library/react-hooks"
 describe("useExpoPushNotifications({ onNotificationReceived, onNotificationInteraction })", () => {
   it("responds to notifications", async () => {
     const onNotificationReceived = jest.fn()
-    const onNotificationReceivedReturnValue = { remove: () => {} }
+    const onNotificationReceivedReturnedRemoveFunction = jest.fn()
+    const onNotificationReceivedReturnValue = {
+      remove: onNotificationReceivedReturnedRemoveFunction,
+    }
     const onNotificationInteraction = jest.fn()
-    const onNotificationInteractionReturnValue = { remove: () => {} }
+    const onNotificationInteractionReturnedRemoveFunction = jest.fn()
+    const onNotificationInteractionReturnValue = {
+      remove: onNotificationInteractionReturnedRemoveFunction,
+    }
 
     jest
       .spyOn(Notifications, "addNotificationReceivedListener")
@@ -55,15 +61,13 @@ describe("useExpoPushNotifications({ onNotificationReceived, onNotificationInter
     })
 
     await waitFor(() =>
-      expect(Notifications.removeNotificationSubscription).toHaveBeenCalledWith(
-        onNotificationReceivedReturnValue,
-      ),
+      expect(onNotificationReceivedReturnedRemoveFunction).toHaveBeenCalled(),
     )
 
     await waitFor(() =>
-      expect(Notifications.removeNotificationSubscription).toHaveBeenCalledWith(
-        onNotificationInteractionReturnValue,
-      ),
+      expect(
+        onNotificationInteractionReturnedRemoveFunction,
+      ).toHaveBeenCalled(),
     )
 
     expect(true).toBe(true)

@@ -26,16 +26,18 @@ const useExpoPushNotifications = ({
       )
 
     return () => {
-      if (receivedNotificationWhenTheAppIsOpenListener.current) {
-        Notifications.removeNotificationSubscription(
-          receivedNotificationWhenTheAppIsOpenListener.current,
-        )
-      }
-      if (notificationTappedWhenTheAppIsClosedListener.current) {
-        Notifications.removeNotificationSubscription(
-          notificationTappedWhenTheAppIsClosedListener.current,
-        )
-      }
+      receivedNotificationWhenTheAppIsOpenListener.current?.remove()
+      // if (receivedNotificationWhenTheAppIsOpenListener.current) {
+      //   Notifications.removeNotificationSubscription(
+      //     receivedNotificationWhenTheAppIsOpenListener.current,
+      //   )
+      // }
+      notificationTappedWhenTheAppIsClosedListener.current?.remove()
+      // if (notificationTappedWhenTheAppIsClosedListener.current) {
+      //   Notifications.removeNotificationSubscription(
+      //     notificationTappedWhenTheAppIsClosedListener.current,
+      //   )
+      // }
     }
   }, [onNotificationReceived, onNotificationInteraction])
 }
