@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": "lib",
+    "declaration": true,
+    "module": "CommonJS", // valid for publishing
+    "bundler": false // override if inherited
+  }
+}
