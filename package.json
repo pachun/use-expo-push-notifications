@@ -1,6 +1,6 @@
 {
   "name": "@pachun/use-expo-push-notifications",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "license": "MIT",
   "description": "Simpler (and more testable) expo-notifications event handling",
   "keywords": [
@@ -37,17 +37,17 @@
     "eslint-config-expo": "~9.2.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
-    "expo": "^53.0.0",
-    "expo-notifications": "~0.31.2",
-    "jest": "^29.7.0",
-    "jest-expo": "~53.0.5",
+    "expo": "53.0.18",
+    "expo-notifications": "~0.31.4",
     "prettier": "^3.3.3",
     "react": "19.0.0",
-    "react-native": "0.79.2",
+    "react-native": "0.79.5",
     "typescript": "~5.8.3"
   },
   "peerDependencies": {
     "expo-notifications": "^0.31.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "expo-router": "^5.1.3"
+  }
 }

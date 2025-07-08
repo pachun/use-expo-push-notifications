@@ -1,6 +1,7 @@
 import React from "react"
 import * as Notifications from "expo-notifications"
 import { EventSubscription } from "expo-modules-core"
+import { useSegments } from "expo-router"
 
 const useExpoPushNotifications = ({
   onNotificationReceived,
@@ -16,6 +17,9 @@ const useExpoPushNotifications = ({
   const notificationTappedWhenTheAppIsClosedListener =
     React.useRef<EventSubscription | null>(null)
 
+  const segments = useSegments()
+  const [pendingInteraction, setPendingInteraction] =
+    React.useState<Notifications.NotificationResponse | null>(null)
   const lastNotificationResponse = Notifications.useLastNotificationResponse()
 
   React.useEffect(() => {
@@ -32,7 +36,7 @@ const useExpoPushNotifications = ({
             // In those cases, we do not trigger our callback.
             lastNotificationResponse?.notification.request.identifier
           ) {
-            onNotificationInteraction(notificationResponse)
+            setPendingInteraction(notificationResponse)
           }
         },
       )
@@ -41,11 +45,16 @@ const useExpoPushNotifications = ({
       receivedNotificationWhenTheAppIsOpenListener.current?.remove()
       notificationTappedWhenTheAppIsClosedListener.current?.remove()
     }
-  }, [
-    onNotificationReceived,
-    onNotificationInteraction,
-    lastNotificationResponse,
-  ])
+  }, [onNotificationReceived, lastNotificationResponse])
+
+  // Wait until router is ready before firing the interaction callback
+  // On cold starts, it's not ready until the router has segments
+  React.useEffect(() => {
+    if (pendingInteraction && segments.length > 0) {
+      onNotificationInteraction(pendingInteraction)
+      setPendingInteraction(null)
+    }
+  }, [pendingInteraction, segments, onNotificationInteraction])
 }
 
 export default useExpoPushNotifications
