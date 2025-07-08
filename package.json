@@ -49,5 +49,15 @@
   },
   "dependencies": {
     "expo-router": "^5.1.3"
+  },
+  "_undici_comment_1": "https://github.com/expo/expo/tree/main/packages/@expo/server#readme",
+  "_undici_comment_2": "Undici is a dependency of @expo/server, which is required by expo-router.",
+  "_undici_comment_3": "We're not sure what expo/server does (the docs are blank), but I don't think we use it;",
+  "_undici_comment_4": "The app works just fine without it.",
+  "_undici_comment_5": "However, the version of undici it requires will force a node upgrade that we really don't want",
+  "_undici_comment_6": "to do because coverage reporting in node versions above 20.9.0 (our current version)",
+  "_undici_comment_7": "is very broken and has been for years: https://github.com/nodejs/node/issues/51251",
+  "resolutions": {
+    "undici": "6.21.3"
   }
 }
