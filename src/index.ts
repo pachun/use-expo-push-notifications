@@ -16,20 +16,36 @@ const useExpoPushNotifications = ({
   const notificationTappedWhenTheAppIsClosedListener =
     React.useRef<EventSubscription | null>(null)
 
+  const lastNotificationResponse = Notifications.useLastNotificationResponse()
+
   React.useEffect(() => {
     receivedNotificationWhenTheAppIsOpenListener.current =
       Notifications.addNotificationReceivedListener(onNotificationReceived)
 
     notificationTappedWhenTheAppIsClosedListener.current =
       Notifications.addNotificationResponseReceivedListener(
-        onNotificationInteraction,
+        notificationResponse => {
+          if (
+            notificationResponse.notification.request.identifier !==
+            // sometimes this callback is triggered for notifications that
+            // have already been sent to this callback (tapped).
+            // In those cases, we do not trigger our callback.
+            lastNotificationResponse?.notification.request.identifier
+          ) {
+            onNotificationInteraction(notificationResponse)
+          }
+        },
       )
 
     return () => {
       receivedNotificationWhenTheAppIsOpenListener.current?.remove()
       notificationTappedWhenTheAppIsClosedListener.current?.remove()
     }
-  }, [onNotificationReceived, onNotificationInteraction])
+  }, [
+    onNotificationReceived,
+    onNotificationInteraction,
+    lastNotificationResponse,
+  ])
 }
 
 export default useExpoPushNotifications
