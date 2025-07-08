@@ -1,6 +1,6 @@
 {
   "name": "@pachun/use-expo-push-notifications",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "license": "MIT",
   "description": "Simpler (and more testable) expo-notifications event handling",
   "keywords": [
@@ -47,9 +47,7 @@
   "peerDependencies": {
     "expo-notifications": "^0.31.2"
   },
-  "dependencies": {
-    "expo-router": "^5.1.3"
-  },
+  "dependencies": {},
   "_undici_comment_1": "https://github.com/expo/expo/tree/main/packages/@expo/server#readme",
   "_undici_comment_2": "Undici is a dependency of @expo/server, which is required by expo-router.",
   "_undici_comment_3": "We're not sure what expo/server does (the docs are blank), but I don't think we use it;",
