@@ -1,5 +1,4 @@
 [![npm version](https://img.shields.io/npm/v/@pachun/use-expo-push-notifications.svg)](https://www.npmjs.com/package/@pachun/use-expo-push-notifications)
-[![cov](https://pachun.github.io/use-expo-push-notifications/badges/coverage.svg)](https://github.com/pachun/use-expo-push-notifications/actions)
 
 # useExpoPushNotifications
 
